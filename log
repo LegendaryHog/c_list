@@ -1,0 +1,65 @@
+Internal ctest changing into directory: /home/legendaryhog/codes/c-list/list/build
+Test project /home/legendaryhog/codes/c-list/list/build
+    Start 1: List.list_construct
+1/3 Test #1: List.list_construct ..............   Passed    0.00 sec
+    Start 2: List.list_push_front
+2/3 Test #2: List.list_push_front .............   Passed    0.00 sec
+    Start 3: List.list_push_back
+3/3 Test #3: List.list_push_back ..............***Exception: SegFault  0.11 sec
+Note: Google Test filter = List.list_push_back
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from List
+[ RUN      ] List.list_push_back
+/home/legendaryhog/codes/c-list/list/unit-tests/test.cpp:107: Failure
+Expected: (head1) != (tail1), actual: 0x556f1a8141f0 vs 0x556f1a8141f0
+/home/legendaryhog/codes/c-list/list/unit-tests/test.cpp:110: Failure
+Expected equality of these values:
+  node_data(tail1)
+    Which is: 1
+  2
+/home/legendaryhog/codes/c-list/list/unit-tests/test.cpp:111: Failure
+Expected equality of these values:
+  node_next(head1)
+    Which is: 0x556f1a814210
+  tail1
+    Which is: 0x556f1a8141f0
+/home/legendaryhog/codes/c-list/list/unit-tests/test.cpp:113: Failure
+Expected equality of these values:
+  node_next(tail1)
+    Which is: 0x556f1a814210
+  nullptr
+    Which is: (nullptr)
+/home/legendaryhog/codes/c-list/list/unit-tests/test.cpp:114: Failure
+Expected equality of these values:
+  node_prev(tail1)
+    Which is: NULL
+  head1
+    Which is: 0x556f1a8141f0
+/home/legendaryhog/codes/c-list/list/unit-tests/test.cpp:124: Failure
+Expected: (head2) != (tail2), actual: 0x556f1a8141f0 vs 0x556f1a8141f0
+/home/legendaryhog/codes/c-list/list/unit-tests/test.cpp:127: Failure
+Expected equality of these values:
+  node_data(tail2)
+    Which is: 1
+  3
+/home/legendaryhog/codes/c-list/list/unit-tests/test.cpp:128: Failure
+Expected equality of these values:
+  node_next(node_next(head2))
+    Which is: NULL
+  tail2
+    Which is: 0x556f1a8141f0
+/home/legendaryhog/codes/c-list/list/unit-tests/test.cpp:129: Failure
+Expected equality of these values:
+  node_data(node_next(head2))
+    Which is: 3
+  2
+
+
+67% tests passed, 1 tests failed out of 3
+
+Total Test time (real) =   0.12 sec
+
+The following tests FAILED:
+	  3 - List.list_push_back (SEGFAULT)
+Errors while running CTest
