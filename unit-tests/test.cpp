@@ -4,9 +4,43 @@ extern "C" {
 #include <list.h>
 }
 
+int node_data(const Node* const node)
+{
+    int dest = 0;
+    node_data_get(node, &dest);
+    return dest;
+}
+
+void int_copy(void* const dest, const void* const source)
+{
+    memcpy(dest, source, sizeof(int));
+}
+
+void int_dtor(void* const ptr) {;}
+
+List* list_construct_int(void)
+{
+    return list_construct(sizeof(int), int_copy, int_dtor);
+}
+
+Node* list_push_front_int(List* const list, int push)
+{
+    return list_push_front(list, &push);
+}
+
+Node* list_push_back_int(List* const list, int push)
+{
+    return list_push_back(list, &push);
+}
+
+Node* list_insert_after_int(List* const list, Node* const node, int push)
+{
+    return list_insert_after(list, node, &push);
+}
+
 TEST(List, list_construct)
 {
-    List* list = list_construct();
+    List* list = list_construct_int();
 
     EXPECT_EQ(list_size(list), 0);
     EXPECT_EQ(list_head(list), nullptr);
@@ -19,8 +53,8 @@ TEST(List, list_construct)
 
 TEST(List, list_push_front)
 {
-    List* list = list_construct();
-    Node* node = list_push_front(list, 1);
+    List* list = list_construct_int();
+    Node* node = list_push_front_int(list, 1);
 
     Node* head = list_head(list);
     Node* tail = list_tail(list);
@@ -36,7 +70,7 @@ TEST(List, list_push_front)
     EXPECT_EQ(node_next(head), nullptr);
     EXPECT_EQ(node_prev(head), nullptr);
 
-    node = list_push_front(list, -1);
+    node = list_push_front_int(list, -1);
 
     Node* head1 = list_head(list);
     Node* tail1 = list_tail(list);
@@ -54,7 +88,7 @@ TEST(List, list_push_front)
     EXPECT_EQ(node_next(tail1), nullptr);
     EXPECT_EQ(node_prev(tail1), head1);
 
-    node = list_push_front(list, -2);
+    node = list_push_front_int(list, -2);
 
     Node* head2 = list_head(list);
     Node* tail2 = list_tail(list);
@@ -76,8 +110,8 @@ TEST(List, list_push_front)
 
 TEST(List, list_push_back)
 {
-    List* list = list_construct();
-    Node* node = list_push_back(list, 1);
+    List* list = list_construct_int();
+    Node* node = list_push_back_int(list, 1);
 
     Node* head = list_head(list);
     Node* tail = list_tail(list);
@@ -93,7 +127,7 @@ TEST(List, list_push_back)
     EXPECT_EQ(node_next(head), nullptr);
     EXPECT_EQ(node_prev(head), nullptr);
 
-    node = list_push_back(list, 2);
+    node = list_push_back_int(list, 2);
 
     Node* head1 = list_head(list);
     Node* tail1 = list_tail(list);
@@ -111,7 +145,7 @@ TEST(List, list_push_back)
     EXPECT_EQ(node_next(tail1), nullptr);
     EXPECT_EQ(node_prev(tail1), head1);
 
-    node = list_push_back(list, 3);
+    node = list_push_back_int(list, 3);
 
     Node* head2 = list_head(list);
     Node* tail2 = list_tail(list);
@@ -133,14 +167,14 @@ TEST(List, list_push_back)
 
 TEST(List, list_insert_after)
 {
-    List* list = list_construct();
-    list_push_back(list, 10);
-    list_push_back(list, 20);
-    list_push_back(list, 30);
-    list_push_back(list, 40);
-    list_push_back(list, 50);
+    List* list = list_construct_int();
+    list_push_back_int(list, 10);
+    list_push_back_int(list, 20);
+    list_push_back_int(list, 30);
+    list_push_back_int(list, 40);
+    list_push_back_int(list, 50);
 
-    Node* node = list_insert_after(list, NULL, 0);
+    Node* node = list_insert_after_int(list, NULL, 0);
 
     EXPECT_EQ(list_size(list), 6);
     EXPECT_EQ(node, list_head(list));
@@ -149,7 +183,7 @@ TEST(List, list_insert_after)
     EXPECT_EQ(node_prev(node), nullptr);
 
     Node* ins_node = node_next_n(list_head(list), 2);
-    node = list_insert_after(list, ins_node, 25);
+    node = list_insert_after_int(list, ins_node, 25);
 
     EXPECT_EQ(list_size(list), 7);
     EXPECT_EQ(node, node_next_n(list_head(list), 3));
@@ -160,7 +194,7 @@ TEST(List, list_insert_after)
     EXPECT_EQ(node_next(prev), node);
     EXPECT_EQ(node_prev(next), node);
 
-    node = list_insert_after(list, list_tail(list), 60);
+    node = list_insert_after_int(list, list_tail(list), 60);
 
     EXPECT_EQ(list_size(list), 8);
     EXPECT_EQ(node_data(node), 60);
@@ -174,12 +208,12 @@ TEST(List, list_insert_after)
 
 TEST(List, list_erase)
 {
-    List* list = list_construct();
-    list_push_back(list, 10); // 0
-    list_push_back(list, 20); // 1
-    list_push_back(list, 30); // 2
-    list_push_back(list, 40); // 3
-    list_push_back(list, 50); // 4
+    List* list = list_construct_int();
+    list_push_back_int(list, 10); // 0
+    list_push_back_int(list, 20); // 1
+    list_push_back_int(list, 30); // 2
+    list_push_back_int(list, 40); // 3
+    list_push_back_int(list, 50); // 4
 
     Node* head = list_head(list);
     Node* tail = list_tail(list);
