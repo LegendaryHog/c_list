@@ -4,11 +4,9 @@ extern "C" {
 #include <list.h>
 }
 
-int node_data(const Node* const node)
+int node_data(Node* const node)
 {
-    int dest = 0;
-    node_data_get(node, &dest);
-    return dest;
+    return *((int*)node_data_get(node));
 }
 
 void int_copy(void* const dest, const void* const source)
@@ -284,27 +282,27 @@ void list_dtor_for_ctor(void* const ptr)
     list_destruct(*((List**)ptr));
 }
 
-Node* list_push_back_list(List* const list, const List* const push)
+Node* list_push_back_tmp_list(List* const list, List* const push)
 {
-    return list_push_back(list, &push);
+    Node* ret = list_push_back(list, &push);
+    list_destruct(push);
+    return ret;
 }
 
 List* list_get(Node* const node)
 {
-    List* ret = NULL;
-    node_data_get(node, &ret);
-    return ret;
+    return *((List**)node_data_get(node));
 }
 
 TEST(List, type_erasure)
 {
     List* list = list_construct(sizeof(List*), list_copy_for_ctor, list_dtor_for_ctor);
 
-    Node* arr[5];
+    Node* arr[5] = {};
 
     for (int i = 0; i < 5; i++)
     {
-        arr[i] = list_push_back_list(list, list_construct_int());
+        arr[i] = list_push_back_tmp_list(list, list_construct_int());
         for (int j = 0; j < 100; j++)
             list_push_back_int(list_get(arr[i]), j);
     }

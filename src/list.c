@@ -58,15 +58,14 @@ const Node* node_const_prev_n(const Node* node, size_t n)
     return node;
 }
 
-void node_data_get(const Node* const node, void* const dest)
-{
-    node->type->copy(dest, (char*)node + sizeof(Node));
-}
-
 void node_data_set(Node* const node, const void* const source)
 {
     node->type->copy((char*)node + sizeof(Node), source);
 }
+
+void* node_data_get(Node* const node) {return (char*)node + sizeof(Node);}
+
+const void* node_data_look(const Node* const node) {return (char*)node + sizeof(Node);}
 
 struct List
 {
