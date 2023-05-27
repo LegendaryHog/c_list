@@ -274,6 +274,44 @@ TEST(List, list_erase)
     list_destruct(list);
 }
 
+void list_copy_for_ctor(void* const dest, const void* const source)
+{
+    *((List**)dest) = list_copy(*((List**)source));
+}
+
+void list_dtor_for_ctor(void* const ptr)
+{
+    list_destruct(*((List**)ptr));
+}
+
+Node* list_push_back_list(List* const list, const List* const push)
+{
+    return list_push_back(list, &push);
+}
+
+List* list_get(Node* const node)
+{
+    List* ret = NULL;
+    node_data_get(node, &ret);
+    return ret;
+}
+
+TEST(List, type_erasure)
+{
+    List* list = list_construct(sizeof(List*), list_copy_for_ctor, list_dtor_for_ctor);
+
+    Node* arr[5];
+
+    for (int i = 0; i < 5; i++)
+    {
+        arr[i] = list_push_back_list(list, list_construct_int());
+        for (int j = 0; j < 100; j++)
+            list_push_back_int(list_get(arr[i]), j);
+    }
+
+    list_destruct(list);
+}
+
 int main(int argc, char** argv)
 {
     testing::InitGoogleTest(&argc, argv);
