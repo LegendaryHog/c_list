@@ -18,6 +18,8 @@ Node* node_construct(data_t data, Node* next, Node* prev)
     return node;
 }
 
+void node_destruct(Node* const node) {free(node);}
+
 Node* node_next(Node* const node) {return node->next;}
 const Node* node_const_next(const Node* const node) {return node->next;}
 Node* node_prev(Node* const node) {return node->prev;}
@@ -43,7 +45,9 @@ const Node* node_const_prev_n(const Node* node, size_t n)
     for (size_t i = 0; i < n; i++, node = node->prev) {;}
     return node;
 }
-data_t node_data(const Node* const node) {return node->data;}
+
+data_t node_data_get(const Node* const node) {return node->data;}
+void node_data_set(Node* const node, data_t source) {node->data = source;}
 
 struct List
 {
@@ -57,7 +61,6 @@ Node* list_head(List* const list) {return list->head;}
 const Node* list_const_head(const List* const list) {return list->head;}
 Node* list_tail(List* const list) {return list->tail;}
 const Node* list_const_tail(const List* const list) {return list->tail;}
-
 
 List* list_construct(void)
 {
@@ -162,7 +165,7 @@ void list_erase(List* const list, Node* const node)
         node->next->prev = node->prev;
 
     list->size--;
-    free(node);    
+    node_destruct(node);
 }
 
 void list_pop_back(List* const list)

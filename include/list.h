@@ -24,8 +24,8 @@ Node* node_prev_n(Node* node, size_t n);
 const Node* node_const_prev(const Node* const node);
 const Node* node_const_prev_n(const Node* node, size_t n);
 
-void node_data_get(const Node* const node);
-void node_data_set();
+data_t node_data_get(const Node* const node);
+void node_data_set(Node* const node, data_t source);
 
 size_t list_size(const List* const list);
 Node* list_head(List* const list);
