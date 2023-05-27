@@ -13,6 +13,7 @@ typedef struct Node Node;
 typedef int data_t; // genesis of evil
 
 Node* node_construct(data_t data, Node* next, Node* prev);
+void  node_destruct(Node* const node);
 
 Node* node_next(Node* const node);
 Node* node_next_n(Node* node, size_t n);
@@ -22,7 +23,9 @@ Node* node_prev(Node* const node);
 Node* node_prev_n(Node* node, size_t n);
 const Node* node_const_prev(const Node* const node);
 const Node* node_const_prev_n(const Node* node, size_t n);
-data_t node_data(const Node* const node);
+
+void node_data_get(const Node* const node);
+void node_data_set();
 
 size_t list_size(const List* const list);
 Node* list_head(List* const list);
