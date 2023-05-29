@@ -231,7 +231,7 @@ void print_all_nodes(const List* const list, FILE* const file)
 
 void connect_all_nodes(const List* const list, FILE* const file)
 {
-    fprintf(file, "\tedge[penwidth=3.0];");
+    fprintf(file, "\tedge[penwidth=3.0];\n");
     for (Node* node = list->head; node != NULL; node = node->next)
     {
         if (node->next != NULL)
