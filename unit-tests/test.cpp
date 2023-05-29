@@ -172,6 +172,8 @@ TEST(List, list_insert_after)
     list_push_back_int(list, 40);
     list_push_back_int(list, 50);
 
+    list_graph_dump(list, "dump");
+
     Node* node = list_insert_after_int(list, NULL, 0);
 
     EXPECT_EQ(list_size(list), 6);

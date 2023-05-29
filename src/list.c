@@ -215,3 +215,74 @@ void list_dump(const List* const list)
         fprintf(stderr, "\t\tnode = %p [next = %p, prev = %p]\n", node, node->next, node->prev);
     fprintf(stderr, "DUMP END");
 }
+
+void descriptor_dump(const List* const list, FILE* const file)
+{
+    fprintf(file, "\tList[shape=record, style=filled, penwidth=3.0, fillcolor=deeppink, color=blue, label=\"list: %p | <head> head: %p | <tail> tail: %p | size: %zd\"];\n",
+    list, list->head, list->tail, list->size);
+}
+
+void print_all_nodes(const List* const list, FILE* const file)
+{
+    fprintf(file, "\tnode[style=filled, shape=record, penwidth=3.0, fillcolor=aqua];\n");
+    for (Node* node = list->head; node != NULL; node = node->next)
+        fprintf(file, "\tNode_%p[label=\"<_node_>node:\\n%p | <next>next:\\n%p | <prev>prev:\\n%p\"];\n", node, node, node->next, node->prev);
+}
+
+void connect_all_nodes(const List* const list, FILE* const file)
+{
+    fprintf(file, "\tedge[penwidth=3.0];");
+    for (Node* node = list->head; node != NULL; node = node->next)
+    {
+        if (node->next != NULL)
+        {
+            fprintf(file, "\tNode_%p:next:e -> Node_%p:_node_:w[arrowhead=normal, color=red];\n", node, node->next);
+            fprintf(file, "\tNode_%p ->Node_%p[style=invis];\n", node, node->next);
+        }
+        if (node->prev != NULL)
+        {
+           fprintf(file, "\tNode_%p:prev:w -> Node_%p:_node_:e[arrowhead=normal, color=green];\n", node, node->prev);
+           fprintf(file, "\tNode_%p ->Node_%p[style=invis];\n", node, node->prev);
+        }
+    }
+}
+
+void connect_descriptor(const List* const list, FILE* const file)
+{
+    if (list->size == 0)
+        return;
+
+    fprintf(file, "\tList:head:e -> Node_%p:_node_:w[color=blue, arrowhead=normal];\n", list->head);
+    fprintf(file, "\tList:tail:e -> Node_%p:_node_:n[color=blue, arrowhead=normal];\n", list->tail);
+}
+
+void list_graph_dump(const List* const list, const char* file_name)
+{
+    size_t len = strlen(file_name);
+    char* dot_file = (char*)malloc(len + 5);
+    dot_file[len + 4] = '\0';
+    strcpy(dot_file, file_name);
+    dot_file[len] = '.';
+    dot_file[len + 1] = 'd';
+    dot_file[len + 2] = 'o';
+    dot_file[len + 3] = 't';
+    
+    FILE* file = fopen(dot_file, "w");
+
+    fprintf(file, "digraph G {\n");
+    fprintf(file, "\trankdir=\"LR\";\n");
+    descriptor_dump(list, file);
+    print_all_nodes(list, file);
+    connect_all_nodes(list, file);
+    connect_descriptor(list, file);
+    fprintf(file, "}\n");
+
+    fclose(file);
+
+    char* res = (char*)calloc(strlen("dot -T png .dot -o .png") + 2 * len + 1, 1);
+    sprintf(res, "dot -T png %s.dot -o %s.png\n", file_name, file_name);
+    system(res);
+
+    free(dot_file);
+    free(res);
+}
