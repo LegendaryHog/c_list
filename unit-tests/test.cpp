@@ -307,7 +307,21 @@ TEST(List, type_erasure)
             list_push_back_int(list_get(arr[i]), j);
     }
 
+    List* ilist = list_construct_int();
+    for (int i = 0; i < 1000; i++)
+        list_push_back_int(ilist, i);
+
+    list_push_back(list, &ilist);
+
+    for (int i = 0; i < 5; i++)
+        for (auto j = 0; j < 100; j++)
+            EXPECT_EQ(j, node_data(node_next_n(list_head(list_get(node_next_n(list_head(list), i))), j)));
+
+    for (int i = 0; i < 1000; i++)
+        EXPECT_EQ(i, node_data(node_next_n(list_head(list_get(node_next_n(list_head(list), 5))), i)));
+
     list_destruct(list);
+    list_destruct(ilist);
 }
 
 int main(int argc, char** argv)
