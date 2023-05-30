@@ -45,5 +45,6 @@ void list_pop_back(List* const list);
 void list_pop_front(List* const list);
 
 void list_dump(const List* const list);
+void list_graph_dump(const List* const list, const char* file_name);
 
 #endif
