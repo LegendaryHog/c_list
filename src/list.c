@@ -259,8 +259,7 @@ void connect_descriptor(const List* const list, FILE* const file)
 void list_graph_dump(const List* const list, const char* file_name)
 {
     size_t len = strlen(file_name);
-    char* dot_file = (char*)malloc(len + 5);
-    dot_file[len + 4] = '\0';
+    char* dot_file = (char*)calloc(len + 5, sizeof(char));
     strcpy(dot_file, file_name);
     dot_file[len] = '.';
     dot_file[len + 1] = 'd';
@@ -279,7 +278,7 @@ void list_graph_dump(const List* const list, const char* file_name)
 
     fclose(file);
 
-    char* res = (char*)calloc(strlen("dot -T png .dot -o .png") + 2 * len + 1, 1);
+    char* res = (char*)calloc(strlen("dot -T png .dot -o .png") + 2 * len + 2, sizeof(char));
     sprintf(res, "dot -T png %s.dot -o %s.png\n", file_name, file_name);
     system(res);
 
